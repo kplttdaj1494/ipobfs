@@ -11,27 +11,15 @@ export KERNELDIR:=$(LINUX_DIR)
 include $(INCLUDE_DIR)/package.mk
 
 
-define Package/ipobfs
-	SECTION:=net
-	CATEGORY:=Network
-	TITLE:=ipobs
-	SUBMENU:=Zapret
-	DEPENDS:=+libnetfilter-queue +libcap
-endef
+# User space package definition removed - building kernel module only
 
 define Build/Prepare
 	mkdir -p $(PKG_BUILD_DIR)
-	$(CP) ./ipobfs ./ipobfs_mod $(PKG_BUILD_DIR)/
+	$(CP) ./ipobfs_mod $(PKG_BUILD_DIR)/
 endef
 
 define Build/Compile
-	$(MAKE) -C $(PKG_BUILD_DIR)/ipobfs $(TARGET_CONFIGURE_OPTS)
 	$(MAKE) $(KERNEL_MAKEOPTS) -C $(PKG_BUILD_DIR)/ipobfs_mod
-endef
-
-define Package/ipobfs/install
-	$(INSTALL_DIR) $(1)/opt/ipobfs/ipobfs
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/ipobfs/ipobfs $(1)/opt/ipobfs/ipobfs
 endef
 
 include $(INCLUDE_DIR)/kernel-defaults.mk
@@ -47,5 +35,4 @@ define KernelPackage/ipobfs
 endef
 
 
-$(eval $(call BuildPackage,ipobfs))
 $(eval $(call KernelPackage,ipobfs))
